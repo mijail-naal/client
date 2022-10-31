@@ -6,7 +6,6 @@ import time
 
 
 class ClientError(Exception):
-    """ Client Error """
 
     def __init__(self, *args):
         super().__init__(*args)
@@ -24,7 +23,7 @@ class Client:
         self.host = host
         self.port = port
         self.timeout = timeout
-        
+
         try:
             self.connection = socket.create_connection((host, port), timeout)
         except socket.error as err:
@@ -32,19 +31,19 @@ class Client:
 
 
     def _to_split(self, data):
-        # Function to convert received data-bytes to a list
+        # Function to convert received data-bytes into a list
         if type(data) == bytes:
             s = data.decode("utf-8")
             return s.split()
         else:
             return data.split()
-        
+
 
     def _convert_to_dict(self, data):
-        # Function to convert received data to a dictionary in format:
+        # Function to convert  the received data into a dictionary in the format:
         # {'server': [(timestamp1, metric_value1), (timestamp2, metric_value2), …]…}
-        # converts the timestamp and metric_value values respectively to the int and float types
-        # and sort the list by the value of timestamp (ascending).
+        # Convert the values "timestamp" and "metric_value" respectively to types int and float,
+        # and sort the list by "timestamp" (ascending).
         def to_sort(e):
             return e[0]
         x = {}
@@ -67,7 +66,7 @@ class Client:
 
 
     def put(self, key, value, timestamp=None):
-        
+
         if not timestamp:
             timestamp = int(time.time())
 
@@ -97,7 +96,7 @@ class Client:
 
         elif data_split[0] == 'ok':
             return self._convert_to_dict(data_split)
-    
+
         else:
             raise ClientError('Invalid data')
 
